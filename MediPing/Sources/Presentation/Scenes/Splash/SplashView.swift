@@ -2,14 +2,15 @@ import SwiftUI
 import MediPingDomain
 import MediPingCore
 
-struct SplashView: View {
-    @StateObject private var viewModel: SplashViewModel
+public struct SplashView: View {
+    @StateObject private var viewModel: SplashViewModel = SplashViewModel()
+    @Binding var isInitialized: Bool
     
-    init(viewModel: SplashViewModel = .init()) {
-        _viewModel = StateObject(wrappedValue: viewModel)
+    public init(isInitialized: Binding<Bool>) {
+        _isInitialized = isInitialized
     }
     
-    var body: some View {
+    public var body: some View {
         ZStack {
             Color.white
             
@@ -26,6 +27,9 @@ struct SplashView: View {
             }
         }
         .ignoresSafeArea()
+        .onChange(of: viewModel.isInitialized) { newValue in
+            isInitialized = newValue
+        }
         .onAppear {
             viewModel.checkPermissions()
         }

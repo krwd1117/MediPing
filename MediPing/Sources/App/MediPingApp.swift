@@ -1,24 +1,18 @@
 import SwiftUI
 import MediPingPresentation
+import MediPingDomain
 
 @main
 struct MediPingApp: App {
-    @StateObject private var appState = AppState()
+    @State private var isInitialized: Bool = false
     
     var body: some Scene {
         WindowGroup {
-            Group {
-                if appState.isInitialized {
-                    MainView()
-                } else {
-                    SplashView()
-                        .environmentObject(appState)
-                }
+            if isInitialized {
+                MainView()
+            } else {
+                SplashView(isInitialized: $isInitialized)
             }
         }
     }
 }
-
-final class AppState: ObservableObject {
-    @Published var isInitialized: Bool = false
-} 

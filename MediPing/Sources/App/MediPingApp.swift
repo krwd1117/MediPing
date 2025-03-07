@@ -11,7 +11,11 @@ struct MediPingApp: App {
             if isInitialized {
                 MainView()
             } else {
-                SplashView(isInitialized: $isInitialized)
+                let viewModel = SplashViewModel(
+                    notificationPermissionUseCase: NotificationPermissionRepositoryImpe(),
+                    initializeUseCase: InitializeImpl()
+                )
+                SplashView(viewModel: viewModel, isInitialized: $isInitialized)
             }
         }
     }

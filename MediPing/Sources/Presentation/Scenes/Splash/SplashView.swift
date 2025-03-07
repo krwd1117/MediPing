@@ -3,11 +3,12 @@ import MediPingDomain
 import MediPingCore
 
 public struct SplashView: View {
-    @StateObject private var viewModel: SplashViewModel = SplashViewModel()
+    @StateObject private var viewModel: SplashViewModel
     @Binding var isInitialized: Bool
     
-    public init(isInitialized: Binding<Bool>) {
-        _isInitialized = isInitialized
+    public init(viewModel: SplashViewModel, isInitialized: Binding<Bool>) {
+        self._viewModel = StateObject(wrappedValue: viewModel)
+        self._isInitialized = isInitialized
     }
     
     public var body: some View {
@@ -29,6 +30,13 @@ public struct SplashView: View {
         .ignoresSafeArea()
         .onChange(of: viewModel.isInitialized) { newValue in
             isInitialized = newValue
+        }
+        .alert("초기화 오류", isPresented: .constant(viewModel.error != nil)) {
+            Button("다시 시도") {
+                viewModel.checkPermissions()
+            }
+        } message: {
+            Text(viewModel.error?.localizedDescription ?? "알 수 없는 오류가 발생했습니다.")
         }
         .onAppear {
             viewModel.checkPermissions()
